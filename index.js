@@ -113,8 +113,17 @@ video {
 /* ========================= */
 /* 📱 MOBILE */
 /* ========================= */
+
+/* 🔥 FUNDO GERAL MOBILE */
+.mobile body {
+  background: url('https://coovery.com.br/wp-content/uploads/2026/03/94143-scaled.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* 🔥 BANNER MOBILE */
 .mobile .banner {
   height: 180px;
+  background: url('https://coovery.com.br/wp-content/uploads/2026/03/94143-scaled.jpg') center/cover;
 }
 
 .mobile .movie {
