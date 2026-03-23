@@ -89,7 +89,7 @@ button {
 }
 
 .movie {
-  min-width: 120px;
+  min-width: 140px;
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -108,6 +108,52 @@ video {
   width: 100%;
   margin-top: 10px;
   border-radius: 10px;
+}
+
+/* ========================= */
+/* 📱 MOBILE */
+/* ========================= */
+.mobile .banner {
+  height: 180px;
+}
+
+.mobile .movie {
+  min-width: 100px;
+}
+
+.mobile .navbar {
+  font-size: 14px;
+}
+
+/* ========================= */
+/* 💻 DESKTOP */
+/* ========================= */
+.desktop .movie {
+  min-width: 150px;
+}
+
+/* ========================= */
+/* 📺 TV */
+/* ========================= */
+.tv .movie {
+  min-width: 260px;
+}
+
+.tv .banner {
+  height: 400px;
+}
+
+.tv .navbar {
+  font-size: 22px;
+}
+
+.tv video {
+  height: 400px;
+}
+
+.tv button {
+  font-size: 18px;
+  padding: 15px 30px;
 }
 </style>
 </head>
@@ -150,12 +196,28 @@ video {
 
 <script>
 
+// 🔥 DETECTAR DISPOSITIVO
+function detectarDispositivo() {
+  const largura = window.innerWidth;
+
+  if (largura <= 768) {
+    document.body.classList.add("mobile");
+  } else if (largura <= 1200) {
+    document.body.classList.add("desktop");
+  } else {
+    document.body.classList.add("tv");
+  }
+}
+
+detectarDispositivo();
+
+// LOGIN
 function entrar() {
   document.getElementById('login').style.display = 'none';
   document.getElementById('app').style.display = 'block';
 }
 
-// LISTA DE FILMES
+// FILMES
 const filmes = [
   {
     titulo: "Filme 1",
