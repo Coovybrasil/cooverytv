@@ -11,8 +11,6 @@ const server = http.createServer((req, res) => {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CooveryTV</title>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
 <style>
 body {
   margin: 0;
@@ -21,6 +19,7 @@ body {
   color: white;
 }
 
+/* LOGIN */
 #login {
   display: flex;
   height: 100vh;
@@ -46,10 +45,12 @@ button {
   border-radius: 5px;
 }
 
+/* HOME */
 #app {
   display: none;
 }
 
+/* NAVBAR */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -62,14 +63,16 @@ button {
   font-weight: bold;
 }
 
+/* BANNER */
 .banner {
-  height: 200px;
-  background: #222;
+  height: 250px;
+  background: url('https://image.tmdb.org/t/p/w1280/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center/cover;
   display: flex;
-  align-items: center;
+  align-items: end;
   padding: 20px;
 }
 
+/* LISTA */
 .section {
   padding: 15px;
 }
@@ -81,9 +84,8 @@ button {
 }
 
 .movie {
-  min-width: 140px;
+  min-width: 120px;
   cursor: pointer;
-  text-align: center;
 }
 
 .movie img {
@@ -91,6 +93,7 @@ button {
   border-radius: 8px;
 }
 
+/* PLAYER */
 video {
   width: 100%;
   margin-top: 10px;
@@ -101,6 +104,7 @@ video {
 
 <body>
 
+<!-- LOGIN -->
 <div id="login">
   <h1>CooveryTV 🚀</h1>
   <input placeholder="Email">
@@ -108,24 +112,25 @@ video {
   <button onclick="entrar()">Entrar</button>
 </div>
 
+<!-- APP -->
 <div id="app">
 
   <div class="navbar">
     <div class="logo">CooveryTV</div>
-    <div>TV | Filmes | Séries</div>
+    <div>Início | Filmes | Séries</div>
   </div>
 
   <div class="banner">
-    <h2>TV ao vivo 🔥</h2>
+    <h2>Filme em destaque</h2>
   </div>
 
   <div class="section">
     <h3>Assistindo agora</h3>
-    <video id="player" controls autoplay></video>
+    <video id="player" controls></video>
   </div>
 
   <div class="section">
-    <h3>Canais</h3>
+    <h3>Populares</h3>
     <div class="movies" id="lista"></div>
   </div>
 
@@ -138,54 +143,44 @@ function entrar() {
   document.getElementById('app').style.display = 'block';
 }
 
+// LISTA DE FILMES (VOCÊ VAI EDITAR AQUI)
+const filmes = [
+  {
+    titulo: "Filme 1",
+    capa: "https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    titulo: "Filme 2",
+    capa: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    titulo: "Filme 3",
+    capa: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  }
+];
+
 const lista = document.getElementById('lista');
 const player = document.getElementById('player');
 
-async function carregarM3U() {
-  try {
-    const res = await fetch("http://oldmonkey.fun/get.php?username=ZeeJGV&password=UffTyb&type=m3u_plus&output=hls");
-    const texto = await res.text();
+// CRIAR FILMES NA TELA
+filmes.forEach(filme => {
+  const div = document.createElement('div');
+  div.className = 'movie';
 
-    const linhas = texto.split('\\n');
+  div.innerHTML = \`
+    <img src="\${filme.capa}">
+  \`;
 
-    for (let i = 0; i < linhas.length; i++) {
+  div.onclick = () => {
+    player.src = filme.video;
+    player.play();
+  };
 
-      if (linhas[i].startsWith('#EXTINF')) {
-
-        const titulo = linhas[i].split(',')[1];
-        const video = linhas[i + 1];
-
-        const div = document.createElement('div');
-        div.className = 'movie';
-
-        div.innerHTML = \`
-          <img src="https://via.placeholder.com/150">
-          <p style="font-size:12px">\${titulo}</p>
-        \`;
-
-        div.onclick = () => assistir(video);
-
-        lista.appendChild(div);
-      }
-    }
-
-  } catch (erro) {
-    console.log("Erro ao carregar lista:", erro);
-  }
-}
-
-function assistir(video) {
-
-  if (Hls.isSupported()) {
-    const hls = new Hls();
-    hls.loadSource(video);
-    hls.attachMedia(player);
-  } else {
-    player.src = video;
-  }
-}
-
-carregarM3U();
+  lista.appendChild(div);
+});
 
 </script>
 
