@@ -68,13 +68,14 @@ button {
   height: 35px;
 }
 
-/* BANNER */
+/* BANNER PADRÃO */
 .banner {
   height: 250px;
   background: url('https://image.tmdb.org/t/p/w1280/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center/cover;
   display: flex;
   align-items: end;
   padding: 20px;
+  position: relative;
 }
 
 /* LISTA */
@@ -114,16 +115,36 @@ video {
 /* 📱 MOBILE */
 /* ========================= */
 
-/* 🔥 FUNDO GERAL MOBILE */
 .mobile body {
-  background: url('https://coovery.com.br/wp-content/uploads/2026/03/94143-scaled.jpg') no-repeat center center fixed;
-  background-size: cover;
+  background: black;
 }
 
-/* 🔥 BANNER MOBILE */
+/* 🔥 BANNER COM VÍDEO */
 .mobile .banner {
   height: 180px;
-  background: url('https://coovery.com.br/wp-content/uploads/2026/03/94143-scaled.jpg') center/cover;
+  overflow: hidden;
+}
+
+/* VÍDEO FUNDO */
+.mobile .banner video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+}
+
+/* OVERLAY ESCURO */
+.mobile .banner::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #0f0f0f, transparent);
+  top: 0;
+  left: 0;
 }
 
 .mobile .movie {
@@ -188,7 +209,14 @@ video {
   </div>
 
   <div class="banner">
-    <h2>Filme em destaque</h2>
+
+    <!-- 🎬 VÍDEO MOBILE -->
+    <video autoplay muted loop playsinline>
+      <source src="https://coovery.com.br/wp-content/uploads/2026/03/VivaCut_video_1769910659862_HD.mp4" type="video/mp4">
+    </video>
+
+    <h2 style="position: relative; z-index: 2;">Filme em destaque</h2>
+
   </div>
 
   <div class="section">
