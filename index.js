@@ -68,14 +68,36 @@ button {
   height: 35px;
 }
 
-/* BANNER PADRÃO */
+/* 🔥 BANNER COM VÍDEO (TODOS DISPOSITIVOS) */
 .banner {
+  position: relative;
   height: 250px;
-  background: url('https://image.tmdb.org/t/p/w1280/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center/cover;
+  overflow: hidden;
   display: flex;
   align-items: end;
   padding: 20px;
-  position: relative;
+}
+
+/* VÍDEO RESPONSIVO */
+.banner video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+}
+
+/* OVERLAY ESCURO */
+.banner::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, #0f0f0f, transparent);
+  top: 0;
+  left: 0;
 }
 
 /* LISTA */
@@ -114,37 +136,8 @@ video {
 /* ========================= */
 /* 📱 MOBILE */
 /* ========================= */
-
-.mobile body {
-  background: black;
-}
-
-/* 🔥 BANNER COM VÍDEO */
 .mobile .banner {
   height: 180px;
-  overflow: hidden;
-}
-
-/* VÍDEO FUNDO */
-.mobile .banner video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: translate(-50%, -50%);
-}
-
-/* OVERLAY ESCURO */
-.mobile .banner::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, #0f0f0f, transparent);
-  top: 0;
-  left: 0;
 }
 
 .mobile .movie {
@@ -210,12 +203,14 @@ video {
 
   <div class="banner">
 
-    <!-- 🎬 VÍDEO MOBILE -->
+    <!-- 🎬 VÍDEO ATUALIZADO -->
     <video autoplay muted loop playsinline>
-      <source src="https://coovery.com.br/wp-content/uploads/2026/03/VivaCut_video_1769910659862_HD.mp4" type="video/mp4">
+      <source src="https://coovery.com.br/wp-content/uploads/2026/03/VivaCut_video_1774296108818_1080HD.mp4" type="video/mp4">
     </video>
 
-    <h2 style="position: relative; z-index: 2;">Filme em destaque</h2>
+    <h2 style="position: relative; z-index: 2;">
+      Filme em destaque
+    </h2>
 
   </div>
 
