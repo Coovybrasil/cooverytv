@@ -4,142 +4,191 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
 
   res.end(`
-  <!DOCTYPE html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8">
-    <title>CooveryTV</title>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CooveryTV</title>
 
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial;
-        background: #0f0f0f;
-        color: white;
-      }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f0f0f;
+  color: white;
+}
 
-      /* NAVBAR */
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 30px;
-        background: #111;
-      }
+/* LOGIN */
+#login {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 
-      .logo {
-        font-size: 22px;
-        font-weight: bold;
-        color: #00ff88;
-      }
+input {
+  padding: 10px;
+  margin: 5px;
+  width: 250px;
+  border-radius: 5px;
+  border: none;
+}
 
-      .menu a {
-        color: white;
-        margin-left: 20px;
-        text-decoration: none;
-      }
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  background: #00ff88;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
 
-      /* BANNER */
-      .banner {
-        height: 300px;
-        background: url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4') center/cover;
-        display: flex;
-        align-items: center;
-        padding: 30px;
-      }
+/* HOME */
+#app {
+  display: none;
+}
 
-      .banner h1 {
-        font-size: 40px;
-      }
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #111;
+}
 
-      /* LISTA DE FILMES */
-      .section {
-        padding: 20px;
-      }
+.logo {
+  color: #00ff88;
+  font-weight: bold;
+}
 
-      .movies {
-        display: flex;
-        gap: 15px;
-        overflow-x: auto;
-      }
+/* BANNER */
+.banner {
+  height: 250px;
+  background: url('https://image.tmdb.org/t/p/w1280/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg') center/cover;
+  display: flex;
+  align-items: end;
+  padding: 20px;
+}
 
-      .movie {
-        min-width: 150px;
-        height: 220px;
-        background: #222;
-        border-radius: 10px;
-        overflow: hidden;
-        cursor: pointer;
-      }
+/* LISTA */
+.section {
+  padding: 15px;
+}
 
-      .movie img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+.movies {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+}
 
-      /* PLAYER */
-      .player {
-        padding: 20px;
-      }
+.movie {
+  min-width: 120px;
+  cursor: pointer;
+}
 
-      video {
-        width: 100%;
-        max-width: 800px;
-        border-radius: 10px;
-      }
-    </style>
-  </head>
+.movie img {
+  width: 100%;
+  border-radius: 8px;
+}
 
-  <body>
+/* PLAYER */
+video {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+</style>
+</head>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
-      <div class="logo">CooveryTV</div>
-      <div class="menu">
-        <a href="#">Início</a>
-        <a href="#">Filmes</a>
-        <a href="#">Séries</a>
-      </div>
-    </div>
+<body>
 
-    <!-- BANNER -->
-    <div class="banner">
-      <h1>Bem-vindo ao CooveryTV 🚀</h1>
-    </div>
+<!-- LOGIN -->
+<div id="login">
+  <h1>CooveryTV 🚀</h1>
+  <input placeholder="Email">
+  <input placeholder="Senha" type="password">
+  <button onclick="entrar()">Entrar</button>
+</div>
 
-    <!-- PLAYER -->
-    <div class="player">
-      <h2>Assistindo agora</h2>
-      <video controls>
-        <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
-      </video>
-    </div>
+<!-- APP -->
+<div id="app">
 
-    <!-- LISTA -->
-    <div class="section">
-      <h2>Populares</h2>
-      <div class="movies">
+  <div class="navbar">
+    <div class="logo">CooveryTV</div>
+    <div>Início | Filmes | Séries</div>
+  </div>
 
-        <div class="movie">
-          <img src="https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg">
-        </div>
+  <div class="banner">
+    <h2>Filme em destaque</h2>
+  </div>
 
-        <div class="movie">
-          <img src="https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg">
-        </div>
+  <div class="section">
+    <h3>Assistindo agora</h3>
+    <video id="player" controls></video>
+  </div>
 
-        <div class="movie">
-          <img src="https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg">
-        </div>
+  <div class="section">
+    <h3>Populares</h3>
+    <div class="movies" id="lista"></div>
+  </div>
 
-      </div>
-    </div>
+</div>
 
-  </body>
-  </html>
+<script>
+
+function entrar() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+// LISTA DE FILMES (VOCÊ VAI EDITAR AQUI)
+const filmes = [
+  {
+    titulo: "Filme 1",
+    capa: "https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    titulo: "Filme 2",
+    capa: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  },
+  {
+    titulo: "Filme 3",
+    capa: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
+    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+  }
+];
+
+const lista = document.getElementById('lista');
+const player = document.getElementById('player');
+
+// CRIAR FILMES NA TELA
+filmes.forEach(filme => {
+  const div = document.createElement('div');
+  div.className = 'movie';
+
+  div.innerHTML = \`
+    <img src="\${filme.capa}">
+  \`;
+
+  div.onclick = () => {
+    player.src = filme.video;
+    player.play();
+  };
+
+  lista.appendChild(div);
+});
+
+</script>
+
+</body>
+</html>
   `);
 });
 
 server.listen(80, () => {
-  console.log('Servidor rodando na porta 80 🚀');
+  console.log('Servidor rodando 🚀');
 });
