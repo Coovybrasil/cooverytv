@@ -28,6 +28,11 @@ body {
   flex-direction: column;
 }
 
+#login img {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
 input {
   padding: 10px;
   margin: 5px;
@@ -54,13 +59,13 @@ button {
 .navbar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 15px;
   background: #111;
 }
 
-.logo {
-  color: #00ff88;
-  font-weight: bold;
+.logo img {
+  height: 35px;
 }
 
 /* BANNER */
@@ -86,6 +91,11 @@ button {
 .movie {
   min-width: 120px;
   cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.movie:hover {
+  transform: scale(1.05);
 }
 
 .movie img {
@@ -106,7 +116,7 @@ video {
 
 <!-- LOGIN -->
 <div id="login">
-  <h1>CooveryTV 🚀</h1>
+  <img src="https://coovery.com.br/wp-content/uploads/2026/03/Photoroom-20260323_155904.png">
   <input placeholder="Email">
   <input placeholder="Senha" type="password">
   <button onclick="entrar()">Entrar</button>
@@ -116,7 +126,9 @@ video {
 <div id="app">
 
   <div class="navbar">
-    <div class="logo">CooveryTV</div>
+    <div class="logo">
+      <img src="https://coovery.com.br/wp-content/uploads/2026/03/Photoroom-20260323_155904.png">
+    </div>
     <div>Início | Filmes | Séries</div>
   </div>
 
@@ -143,7 +155,7 @@ function entrar() {
   document.getElementById('app').style.display = 'block';
 }
 
-// LISTA DE FILMES (VOCÊ VAI EDITAR AQUI)
+// LISTA DE FILMES
 const filmes = [
   {
     titulo: "Filme 1",
@@ -165,7 +177,6 @@ const filmes = [
 const lista = document.getElementById('lista');
 const player = document.getElementById('player');
 
-// CRIAR FILMES NA TELA
 filmes.forEach(filme => {
   const div = document.createElement('div');
   div.className = 'movie';
