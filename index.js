@@ -1,6 +1,36 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
 const server = http.createServer((req, res) => {
+
+  // 🔥 SERVIR ARQUIVOS HLS
+  if (req.url.startsWith('/furiosa')) {
+    const filePath = path.join(__dirname, req.url);
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        return res.end('Arquivo não encontrado');
+      }
+
+      if (filePath.endsWith('.m3u8')) {
+        res.writeHead(200, { 'Content-Type': 'application/vnd.apple.mpegurl' });
+      } else if (filePath.endsWith('.ts')) {
+        res.writeHead(200, { 'Content-Type': 'video/mp2t' });
+      } else if (filePath.endsWith('.vtt')) {
+        res.writeHead(200, { 'Content-Type': 'text/vtt' });
+      } else {
+        res.writeHead(200);
+      }
+
+      res.end(data);
+    });
+
+    return;
+  }
+
+  // 🌐 HTML NORMAL
   res.writeHead(200, { 'Content-Type': 'text/html' });
 
   res.end(`
@@ -10,6 +40,8 @@ const server = http.createServer((req, res) => {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CooveryTV</title>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
 <style>
 body {
@@ -68,7 +100,7 @@ button {
   height: 35px;
 }
 
-/* 🔥 BANNER COM VÍDEO (TODOS DISPOSITIVOS) */
+/* BANNER */
 .banner {
   position: relative;
   height: 250px;
@@ -78,7 +110,6 @@ button {
   padding: 20px;
 }
 
-/* VÍDEO RESPONSIVO */
 .banner video {
   position: absolute;
   top: 50%;
@@ -89,15 +120,12 @@ button {
   transform: translate(-50%, -50%);
 }
 
-/* OVERLAY ESCURO */
 .banner::after {
   content: "";
   position: absolute;
   width: 100%;
   height: 100%;
   background: linear-gradient(to top, #0f0f0f, transparent);
-  top: 0;
-  left: 0;
 }
 
 /* LISTA */
@@ -114,11 +142,6 @@ button {
 .movie {
   min-width: 140px;
   cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.movie:hover {
-  transform: scale(1.05);
 }
 
 .movie img {
@@ -132,58 +155,11 @@ video {
   margin-top: 10px;
   border-radius: 10px;
 }
-
-/* ========================= */
-/* 📱 MOBILE */
-/* ========================= */
-.mobile .banner {
-  height: 180px;
-}
-
-.mobile .movie {
-  min-width: 100px;
-}
-
-.mobile .navbar {
-  font-size: 14px;
-}
-
-/* ========================= */
-/* 💻 DESKTOP */
-/* ========================= */
-.desktop .movie {
-  min-width: 150px;
-}
-
-/* ========================= */
-/* 📺 TV */
-/* ========================= */
-.tv .movie {
-  min-width: 260px;
-}
-
-.tv .banner {
-  height: 400px;
-}
-
-.tv .navbar {
-  font-size: 22px;
-}
-
-.tv video {
-  height: 400px;
-}
-
-.tv button {
-  font-size: 18px;
-  padding: 15px 30px;
-}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <img src="https://coovery.com.br/wp-content/uploads/2026/03/Photoroom-20260323_155904.png">
   <input placeholder="Email">
@@ -191,7 +167,6 @@ video {
   <button onclick="entrar()">Entrar</button>
 </div>
 
-<!-- APP -->
 <div id="app">
 
   <div class="navbar">
@@ -202,16 +177,10 @@ video {
   </div>
 
   <div class="banner">
-
-    <!-- 🎬 VÍDEO ATUALIZADO -->
     <video autoplay muted loop playsinline>
-      <source src="https://coovery.com.br/wp-content/uploads/2026/03/VivaCut_video_1774296108818_1080HD.mp4" type="video/mp4">
+      <source src="https://coovery.com.br/wp-content/uploads/2026/03/VivaCut_video_1774296108818_1080HD.mp4">
     </video>
-
-    <h2 style="position: relative; z-index: 2;">
-      Filme em destaque
-    </h2>
-
+    <h2 style="position: relative; z-index: 2;">Filme em destaque</h2>
   </div>
 
   <div class="section">
@@ -228,43 +197,18 @@ video {
 
 <script>
 
-// 🔥 DETECTAR DISPOSITIVO
-function detectarDispositivo() {
-  const largura = window.innerWidth;
-
-  if (largura <= 768) {
-    document.body.classList.add("mobile");
-  } else if (largura <= 1200) {
-    document.body.classList.add("desktop");
-  } else {
-    document.body.classList.add("tv");
-  }
-}
-
-detectarDispositivo();
-
 // LOGIN
 function entrar() {
   document.getElementById('login').style.display = 'none';
   document.getElementById('app').style.display = 'block';
 }
 
-// FILMES
+// 🎬 SEU FILME REAL
 const filmes = [
   {
-    titulo: "Filme 1",
+    titulo: "Furiosa",
     capa: "https://image.tmdb.org/t/p/w500/8UlWHLMpgZm9bx6QYh0NFoq67TZ.jpg",
-    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-  },
-  {
-    titulo: "Filme 2",
-    capa: "https://image.tmdb.org/t/p/w500/qNBAXBIQlnOThrVvA6mA2B5ggV6.jpg",
-    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-  },
-  {
-    titulo: "Filme 3",
-    capa: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
-    video: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+    video: "/furiosa/hls/playlist.m3u8"
   }
 ];
 
@@ -275,13 +219,22 @@ filmes.forEach(filme => {
   const div = document.createElement('div');
   div.className = 'movie';
 
-  div.innerHTML = \`
-    <img src="\${filme.capa}">
-  \`;
+  div.innerHTML = \`<img src="\${filme.capa}">\`;
 
   div.onclick = () => {
-    player.src = filme.video;
-    player.play();
+
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(filme.video);
+      hls.attachMedia(player);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        player.play();
+      });
+    } else {
+      player.src = filme.video;
+      player.play();
+    }
+
   };
 
   lista.appendChild(div);
